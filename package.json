@@ -1,0 +1,27 @@
+{
+  "name": "kittybot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ZekNikZ",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@zeknikz/eslint-config": "^1.0.1",
+    "@zeknikz/prettier-config": "^1.0.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5"
+  }
+}
