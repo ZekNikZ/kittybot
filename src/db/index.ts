@@ -14,6 +14,6 @@ export const db = new Sequelize({
   models: [CachedVoiceChannel, GameChannel],
 });
 
-await db.sync();
+await db.sync({ alter: true });
 
 export async function initDB() {}

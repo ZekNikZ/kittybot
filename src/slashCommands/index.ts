@@ -1,13 +1,14 @@
 import { Client, REST, Routes, Snowflake } from "discord.js";
 import { CLIENT_ID, TOKEN } from "../env";
 import { CommandData } from "./types";
-import createvc from "./createvc";
-import createprivatevc from "./createprivatevc";
-import gamechannel from "./gamechannel";
+import CreateVCCommand from "./CreateVC";
+import CreatePrivateVCCommand from "./CreatePrivateVC";
+import GameChannelCommand from "./GameChannel";
+import RestartCommand from "./Restart";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
 
-const COMMANDS: CommandData[] = [createvc, createprivatevc, gamechannel];
+const COMMANDS: CommandData[] = [CreateVCCommand, CreatePrivateVCCommand, GameChannelCommand, RestartCommand];
 
 export async function createSlashCommands(guildId?: Snowflake) {
   const rest = new REST().setToken(TOKEN);
