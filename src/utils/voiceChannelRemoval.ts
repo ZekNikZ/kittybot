@@ -1,5 +1,5 @@
 import { Client, Snowflake } from "discord.js";
-import { CachedVoiceChannel } from "../db/CachedVoiceChannel.ts";
+import { CachedVoiceChannel } from "../db/CachedVoiceChannel";
 
 const CHANNEL_TIMEOUT_SECONDS = 10;
 const INITIAL_CHANNEL_TIMEOUT_SECONDS = 60;

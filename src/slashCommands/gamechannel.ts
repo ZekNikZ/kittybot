@@ -1,6 +1,6 @@
 import { ChannelType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
-import { CommandData } from "./types.ts";
-import { GameChannel } from "../db/GameChannel.ts";
+import { CommandData } from "./types";
+import { GameChannel } from "../db/GameChannel";
 import { Op } from "sequelize";
 
 const commandData: CommandData = {

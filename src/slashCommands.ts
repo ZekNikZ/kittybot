@@ -1,8 +1,8 @@
 import { Client, REST, Routes, Snowflake } from "discord.js";
-import { CLIENT_ID, TOKEN } from "./env.ts";
+import { CLIENT_ID, TOKEN } from "./env";
 import path from "path";
 import fs from "fs/promises";
-import { CommandData } from "./slashCommands/types.ts";
+import { CommandData } from "./slashCommands/types";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

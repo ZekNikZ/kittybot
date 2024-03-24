@@ -7,9 +7,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "dev": "ts-node src/index.ts",
-    "register-slash-commands": "ts-node src/slashCommands.ts"
+    "start": "tsx src/index.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
@@ -19,7 +17,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^3.2.5",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },
   "dependencies": {

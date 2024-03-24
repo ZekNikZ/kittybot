@@ -1,8 +1,8 @@
 import { ChannelType, SlashCommandBuilder } from "discord.js";
-import { CommandData } from "./types.ts";
-import { startTrackingVoiceChannel } from "../utils/voiceChannelRemoval.ts";
-import { GameChannel } from "../db/GameChannel.ts";
-import { CachedVoiceChannel } from "../db/CachedVoiceChannel.ts";
+import { CommandData } from "./types";
+import { startTrackingVoiceChannel } from "../utils/voiceChannelRemoval";
+import { GameChannel } from "../db/GameChannel";
+import { CachedVoiceChannel } from "../db/CachedVoiceChannel";
 
 async function getChannelTag(guildId: string, gameChannel: GameChannel): Promise<string> {
   // Get available choices

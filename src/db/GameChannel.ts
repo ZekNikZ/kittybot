@@ -1,20 +1,20 @@
-import { Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 
 @Table({
   timestamps: true,
 })
 export class GameChannel extends Model {
   @PrimaryKey
-  @Column
+  @Column(DataType.STRING)
   declare guildId: string;
 
   @PrimaryKey
-  @Column
+  @Column(DataType.STRING)
   declare gameName: string;
 
-  @Column
+  @Column({ type: DataType.STRING, allowNull: false })
   declare channelId: string;
 
-  @Column
+  @Column(DataType.STRING)
   declare channelNameOptions?: string;
 }

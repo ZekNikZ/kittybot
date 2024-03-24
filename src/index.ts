@@ -1,8 +1,8 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { TEST_SERVER, TOKEN } from "./env.ts";
-import { createSlashCommands, registerSlashCommandHandler } from "./slashCommands.ts";
-import { syncCachedVoiceChannels } from "./utils/voiceChannelRemoval.ts";
-import { initDB } from "./db/database.ts";
+import { TEST_SERVER, TOKEN } from "./env";
+import { createSlashCommands, registerSlashCommandHandler } from "./slashCommands";
+import { syncCachedVoiceChannels } from "./utils/voiceChannelRemoval";
+import { initDB } from "./db/database";
 
 const client = new Client({
   intents: [
