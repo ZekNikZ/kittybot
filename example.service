@@ -6,8 +6,10 @@ Wants=network-online.target
 [Service]
 Restart=always
 Type=simple
-ExecStart=/home/kittybot/kittybot/run.sh
-WorkingDirectory=/home/kittybot
+Environment=NODE_VERSION=20
+ExecStart=/home/matt/.nvm/nvm-exec /home/matt/kittybot/run.sh
+WorkingDirectory=/home/matt/kittybot
+User=matt
 
 [Install]
 WantedBy=multi-user.target
