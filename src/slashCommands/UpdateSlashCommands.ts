@@ -1,11 +1,12 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { CommandData } from "./types";
 import { ADMIN_USERNAME } from "../env";
+import { createSlashCommands } from ".";
 
 const commandData: CommandData = {
   data: new SlashCommandBuilder()
-    .setName("restart")
-    .setDescription("Restart and update the bot")
+    .setName("updateslashcommands")
+    .setDescription("Update the slash commands of the bot")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setDMPermission(false),
   async handler(interaction) {
@@ -14,9 +15,11 @@ const commandData: CommandData = {
       return;
     }
 
-    await interaction.reply({ content: "Restarting...", ephemeral: true });
+    await interaction.reply({ content: "Updating slash commands...", ephemeral: true });
 
-    interaction.client.destroy();
+    createSlashCommands();
+
+    await interaction.editReply("Updated slash commands.");
   },
 };
 
