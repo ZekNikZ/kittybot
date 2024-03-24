@@ -1,26 +1,33 @@
-import dotenv from "dotenv";
-dotenv.config();
-const TOKEN = process.env.TOKEN;
-
 import { Client, GatewayIntentBits } from "discord.js";
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent] });
+import { TEST_SERVER, TOKEN } from "./env.ts";
+import { createSlashCommands, registerSlashCommandHandler } from "./slashCommands.ts";
+import { syncCachedVoiceChannels } from "./utils/voiceChannelRemoval.ts";
+import { initDB } from "./db/database.ts";
 
-client.on("ready", () => {
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildVoiceStates,
+  ],
+});
+
+client.on("ready", async () => {
+  // Init DB
+  await initDB();
+
+  // Sync cached voice channels
+  await syncCachedVoiceChannels(client);
+
   console.log(`Logged in as ${client.user?.tag}!`);
 });
 
-client.on("messageCreate", async (msg) => {
-  msg.reply("Hello!!!");
-});
+registerSlashCommandHandler(client);
 
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === "ping") {
-    await interaction.reply("Pong!");
-  }
-});
+if (TEST_SERVER) {
+  await createSlashCommands(TEST_SERVER);
+}
 
 client.login(TOKEN);
-
-export {};

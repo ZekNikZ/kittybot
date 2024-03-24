@@ -8,10 +8,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "register-slash-commands": "ts-node src/slashCommands.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "@types/validator": "^13.11.9",
     "@zeknikz/eslint-config": "^1.0.1",
     "@zeknikz/prettier-config": "^1.0.1",
     "eslint": "^8.57.0",
@@ -22,6 +24,10 @@
   },
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "reflect-metadata": "^0.2.1",
+    "sequelize": "^6.37.1",
+    "sequelize-typescript": "^2.1.6",
+    "sqlite3": "^5.1.7"
   }
 }
