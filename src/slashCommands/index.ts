@@ -4,6 +4,8 @@ import { CommandData } from "./types";
 import createvc from "./createvc";
 import createprivatevc from "./createprivatevc";
 import gamechannel from "./gamechannel";
+import { resolve } from "path";
+import { fileURLToPath } from "url";
 
 const COMMANDS: CommandData[] = [createvc, createprivatevc, gamechannel];
 
@@ -64,4 +66,11 @@ export function registerSlashCommandHandler(client: Client) {
       }
     }
   });
+}
+
+const pathToThisFile = resolve(fileURLToPath(import.meta.url));
+const pathPassedToNode = resolve(process.argv[1]);
+const isThisFileBeingRunViaCLI = pathToThisFile.includes(pathPassedToNode);
+if (isThisFileBeingRunViaCLI) {
+  createSlashCommands();
 }

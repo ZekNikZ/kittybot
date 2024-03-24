@@ -7,7 +7,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "configure-slash-commands": "tsx src/slashCommands/index.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
