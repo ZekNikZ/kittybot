@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Ensure we are up-to-date
 git pull
 

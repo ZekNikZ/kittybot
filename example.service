@@ -7,7 +7,7 @@ Wants=network-online.target
 Restart=always
 Type=simple
 ExecStart=/home/kittybot/kittybot/run.sh
-Environment='TEST=test'
+WorkingDirectory=/home/kittybot
 
 [Install]
 WantedBy=multi-user.target
