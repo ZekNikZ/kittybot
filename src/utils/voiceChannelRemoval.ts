@@ -20,17 +20,21 @@ export async function deleteAllInactive(client: Client) {
   const channels = await CachedVoiceChannel.findAll();
 
   for (const cachedChannel of channels) {
-    await CachedVoiceChannel.destroy({ where: { guildId: cachedChannel.guildId, channelId: cachedChannel.channelId } });
+    cachedChannel.destroy();
 
-    const channel = await client.channels.fetch(cachedChannel.channelId).catch(console.error);
-    if (!channel?.isVoiceBased()) {
-      continue;
-    }
-    if (channel.members.size > 0) {
-      continue;
-    }
+    try {
+      const channel = await client.channels.fetch(cachedChannel.channelId).catch(console.error);
+      if (!channel?.isVoiceBased()) {
+        continue;
+      }
+      if (channel.members.size > 0) {
+        continue;
+      }
 
-    await channel?.delete();
+      await channel?.delete();
+    } catch (err) {
+      console.warn(`Could not delete channel ${cachedChannel.guildId}/${cachedChannel.channelId}`);
+    }
   }
 }
 
@@ -38,15 +42,17 @@ export async function startTrackingVoiceChannel(
   client: Client,
   guildId: Snowflake,
   channelId: Snowflake,
-  gameId: string
+  gameName: string,
+  channelTag: string
 ) {
   // Start tracking the channel
   const timestamp = Date.now();
   await CachedVoiceChannel.create({
     guildId,
     channelId,
-    gameId,
+    gameName,
     timestamp,
+    channelTag,
   });
 
   // Remove after INITIAL_CHANNEL_TIMEOUT_SECONDS seconds

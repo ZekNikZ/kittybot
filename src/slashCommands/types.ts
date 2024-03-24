@@ -1,6 +1,7 @@
-import { SlashCommandBuilder, Interaction, CacheType } from "discord.js";
+import { SlashCommandBuilder, CacheType, ChatInputCommandInteraction, AutocompleteInteraction } from "discord.js";
 
 export interface CommandData {
   data: SlashCommandBuilder;
-  handler(interaction: Interaction<CacheType>): Promise<void>;
+  handler(interaction: ChatInputCommandInteraction<CacheType>): Promise<void>;
+  autocomplete?(interaction: AutocompleteInteraction<CacheType>): Promise<void>;
 }

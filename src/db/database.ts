@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { SQLITE_HOST, SQLITE_PASS, SQLITE_USER } from "../env.ts";
 import { CachedVoiceChannel } from "./CachedVoiceChannel.ts";
+import { GameChannel } from "./GameChannel.ts";
 
 export const db = new Sequelize({
   database: "kittybot",
@@ -10,7 +11,7 @@ export const db = new Sequelize({
   dialect: "sqlite",
   logging: false,
   storage: "database.sqlite3",
-  models: [CachedVoiceChannel],
+  models: [CachedVoiceChannel, GameChannel],
 });
 
 await db.sync();
