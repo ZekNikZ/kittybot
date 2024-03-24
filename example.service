@@ -1,0 +1,13 @@
+[Unit]
+Description=Kitty Bot
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+Type=simple
+ExecStart=/home/kittybot/kittybot/run.sh
+Environment='TEST=test'
+
+[Install]
+WantedBy=multi-user.target
