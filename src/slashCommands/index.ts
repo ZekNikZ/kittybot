@@ -1,35 +1,19 @@
 import { Client, REST, Routes, Snowflake } from "discord.js";
-import { CLIENT_ID, TOKEN } from "./env";
-import path from "path";
-import fs from "fs/promises";
-import { CommandData } from "./slashCommands/types";
-import { fileURLToPath } from "url";
+import { CLIENT_ID, TOKEN } from "../env";
+import { CommandData } from "./types";
+import createvc from "./createvc";
+import createprivatevc from "./createprivatevc";
+import gamechannel from "./gamechannel";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const folderPath = path.join(__dirname, "slashCommands");
-const commandFiles = await fs.readdir(folderPath);
-const commands: CommandData[] = [];
-for (const file of commandFiles) {
-  if (file.endsWith(".js") || file.endsWith(".ts")) {
-    const filePath = path.join(folderPath, file);
-    const relativePath = path.relative(__dirname, filePath);
-    const { default: commandData } = await import("./" + relativePath.replace(/\\/g, "/"));
-    if (commandData && "data" in commandData && "handler" in commandData) {
-      console.info(`Found slash command at ${filePath}`);
-      commands.push(commandData);
-    } else {
-      console.warn(`The command at ${filePath} is missing a required "data" or "handler" property`);
-    }
-  }
-}
+const COMMANDS: CommandData[] = [createvc, createprivatevc, gamechannel];
 
 export async function createSlashCommands(guildId?: Snowflake) {
   const rest = new REST().setToken(TOKEN);
 
   try {
-    console.log(`Started refreshing ${commands.length} application (/) commands.`);
+    console.log(`Started refreshing ${COMMANDS.length} application (/) commands.`);
 
-    const body = commands.map((command) => command.data.toJSON());
+    const body = COMMANDS.map((command) => command.data.toJSON());
 
     let data;
     if (guildId) {
@@ -48,7 +32,7 @@ export async function createSlashCommands(guildId?: Snowflake) {
 export function registerSlashCommandHandler(client: Client) {
   client.on("interactionCreate", async (interaction) => {
     if (interaction.isChatInputCommand()) {
-      const command = commands.filter((c) => c.data.name === interaction.commandName)[0];
+      const command = COMMANDS.filter((c) => c.data.name === interaction.commandName)[0];
 
       if (!command) {
         console.error(`No command matching ${interaction.commandName} was found.`);
@@ -66,7 +50,7 @@ export function registerSlashCommandHandler(client: Client) {
         }
       }
     } else if (interaction.isAutocomplete()) {
-      const command = commands.filter((c) => c.data.name === interaction.commandName)[0];
+      const command = COMMANDS.filter((c) => c.data.name === interaction.commandName)[0];
 
       if (!command) {
         console.error(`No command matching ${interaction.commandName} was found.`);
