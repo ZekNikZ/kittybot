@@ -63,6 +63,11 @@ const commandData: CommandData = {
       type: ChannelType.GuildVoice,
       parent: fromChannel.parent,
       permissionOverwrites: [
+        ...fromChannel.parent!.permissionOverwrites.cache.map((p) => ({
+          id: p.id,
+          allow: p.allow.toArray(),
+          deny: p.deny.toArray(),
+        })),
         {
           id: gameChannel.roleId,
           allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.Connect],
