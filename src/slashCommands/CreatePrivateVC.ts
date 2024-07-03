@@ -1,4 +1,4 @@
-import { ChannelType, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { CategoryChannel, ChannelType, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { CommandData } from "./types";
 import { startTrackingVoiceChannel } from "../utils/voiceChannelRemoval";
 import { GameChannel } from "../db/GameChannel";
@@ -32,11 +32,18 @@ const commandData: CommandData = {
       return;
     }
 
+    const category = await interaction.guild!.channels.fetch(parentChannelId);
+
     const newVoiceChannel = await interaction.guild?.channels.create({
       name: `Private: @${interaction.user.displayName}`,
       type: ChannelType.GuildVoice,
       parent: parentChannelId,
       permissionOverwrites: [
+        ...(category as CategoryChannel).permissionOverwrites.cache.map((p) => ({
+          id: p.id,
+          allow: p.allow.toArray(),
+          deny: p.deny.toArray(),
+        })),
         {
           id: interaction.user.id,
           allow: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.MoveMembers],
