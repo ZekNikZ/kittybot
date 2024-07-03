@@ -11,6 +11,7 @@
     "configure-slash-commands": "tsx src/slashCommands/index.ts"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.6",
     "@types/node": "^20.11.30",
     "@types/validator": "^13.11.9",
     "@zeknikz/eslint-config": "^1.0.1",
@@ -24,9 +25,11 @@
   "dependencies": {
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.1",
     "sequelize": "^6.37.1",
     "sequelize-typescript": "^2.1.6",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "winston": "^3.13.0"
   }
 }

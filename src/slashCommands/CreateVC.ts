@@ -1,4 +1,4 @@
-import { ChannelType, SlashCommandBuilder } from "discord.js";
+import { ChannelType, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { CommandData } from "./types";
 import { startTrackingVoiceChannel } from "../utils/voiceChannelRemoval";
 import { GameChannel } from "../db/GameChannel";
@@ -62,6 +62,12 @@ const commandData: CommandData = {
       name: `${gameChannel.gameName} ${channelTag}`,
       type: ChannelType.GuildVoice,
       parent: fromChannel.parent,
+      permissionOverwrites: [
+        {
+          id: gameChannel.roleId,
+          allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.Connect],
+        },
+      ],
     });
 
     if (newVoiceChannel) {

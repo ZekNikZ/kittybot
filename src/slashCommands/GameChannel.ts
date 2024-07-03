@@ -2,6 +2,7 @@ import { ChannelType, PermissionFlagsBits, SlashCommandBuilder } from "discord.j
 import { CommandData } from "./types";
 import { GameChannel } from "../db/GameChannel";
 import { Op } from "sequelize";
+import _ from "lodash";
 
 const commandData: CommandData = {
   data: new SlashCommandBuilder()
@@ -19,6 +20,9 @@ const commandData: CommandData = {
             .setRequired(true)
         )
         .addStringOption((option) => option.setName("game").setDescription("The name of the game").setRequired(true))
+        .addRoleOption((option) =>
+          option.setName("role").setDescription("The role associated with this game").setRequired(true)
+        )
         .addStringOption((option) =>
           option.setName("names").setDescription("A comma-separated list of channel names to use instead of numbers")
         )
@@ -45,6 +49,9 @@ const commandData: CommandData = {
             .setDescription("The game channel to associate")
             .addChannelTypes(ChannelType.GuildText)
             .setRequired(true)
+        )
+        .addRoleOption((option) =>
+          option.setName("role").setDescription("The role associated with this game").setRequired(true)
         )
         .addStringOption((option) =>
           option.setName("names").setDescription("A comma-separated list of channel names to use instead of numbers")
@@ -119,6 +126,7 @@ const commandData: CommandData = {
     } else if (subcommand === "assign") {
       const channel = interaction.options.getChannel("channel");
       const gameName = interaction.options.getString("game");
+      const role = interaction.options.getRole("role");
       const channelNameOptions = interaction.options
         .getString("names")
         ?.split(",")
@@ -141,6 +149,14 @@ const commandData: CommandData = {
         return;
       }
 
+      if (!role) {
+        await interaction.reply({
+          content: "You must provide a role.",
+          ephemeral: true,
+        });
+        return;
+      }
+
       await interaction.deferReply({ ephemeral: true });
 
       const existingRecord = await GameChannel.findOne({ where: { guildId, gameName } });
@@ -155,6 +171,7 @@ const commandData: CommandData = {
         guildId,
         gameName,
         channelId: channel.id,
+        roleId: role.id,
         channelNameOptions,
       });
 
@@ -170,6 +187,7 @@ const commandData: CommandData = {
     } else if (subcommand === "edit") {
       const gameName = interaction.options.getString("game");
       const channel = interaction.options.getChannel("channel");
+      const role = interaction.options.getRole("role");
       const channelNameOptions = interaction.options
         .getString("names")
         ?.split(",")
@@ -179,6 +197,14 @@ const commandData: CommandData = {
       if (!channel || channel.type !== ChannelType.GuildText) {
         await interaction.reply({
           content: "Invalid channel to assign. Choose another.",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (!role) {
+        await interaction.reply({
+          content: "You must provide a role.",
           ephemeral: true,
         });
         return;
@@ -196,11 +222,12 @@ const commandData: CommandData = {
 
       existingRecord.channelId = channel.id;
       existingRecord.channelNameOptions = channelNameOptions;
+      existingRecord.roleId = role.id;
       await existingRecord.save();
 
       await interaction.editReply(`The association for game "${gameName}" has been updated.`);
     } else if (subcommand === "info") {
-      await interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply();
 
       // Private category
       const privateChannelId = (await GameChannel.findOne({ where: { guildId, gameName: "private" } }))?.channelId;
@@ -215,17 +242,21 @@ const commandData: CommandData = {
           },
         },
       });
-      const gameChannelList = gameChannels
-        .map(
-          (channel) =>
-            `- **${channel.gameName}** => <#${channel.channelId}>` +
-            (channel.channelNameOptions ? ` Channel names: ${channel.channelNameOptions.split(",").join(", ")}` : "")
-        )
-        .join("\n");
-
-      await interaction.editReply(
-        `Private channel category: ${privateChannelInfo}\n\nGame channels:\n${gameChannelList}`
+      const gameChannelList = gameChannels.map(
+        (channel) =>
+          `- **${channel.gameName}** => <#${channel.channelId}> / <@&${channel.roleId}>` +
+          (channel.channelNameOptions ? ` / Channel names: ${channel.channelNameOptions.split(",").join(", ")}` : "")
       );
+
+      const gameChannelMessages = _.chunk(gameChannelList, 10);
+
+      const reply = await interaction.editReply(
+        `Private channel category: ${privateChannelInfo}\n\nGame channels:\n${gameChannelMessages.length > 0 ? gameChannelMessages[0].join("\n") : ""}`
+      );
+
+      for (let i = 1; i < gameChannelMessages.length; i++) {
+        await reply.reply(`Game channels (continued):\n${gameChannelMessages[i].join("\n")}`);
+      }
     }
   },
   async autocomplete(interaction) {

@@ -15,6 +15,9 @@ export class GameChannel extends Model {
   @Column({ type: DataType.STRING, allowNull: false })
   declare channelId: string;
 
+  @Column({ type: DataType.STRING })
+  declare roleId: string;
+
   @Column(DataType.STRING)
   declare channelNameOptions?: string;
 }
